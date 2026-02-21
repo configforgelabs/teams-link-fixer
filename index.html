@@ -1396,14 +1396,14 @@
                     return graphRequest(url, token, method, body, retries - 1);
                 }
 
-                if (res.status === 204) { console.log('[Graph]   204 No Content (success)'); return null; }
+                if (res.status === 204 || res.status === 202) { console.log(`[Graph]   ${res.status} (success, no body)`); return null; }
                 if (!res.ok) {
                     let errBody = '';
                     try { errBody = await res.text(); } catch { }
                     console.error(`[Graph]   ERROR ${res.status}:`, errBody);
                     throw new Error(`Graph ${method} ${res.status}: ${errBody}`);
                 }
-                if (method === 'DELETE') return null;
+                if (method === 'DELETE' || method === 'POST' && res.headers.get('content-length') === '0') return null;
                 const json = await res.json();
                 if (json.value) console.log(`[Graph]   Response contains ${json.value.length} items`);
                 return json;
