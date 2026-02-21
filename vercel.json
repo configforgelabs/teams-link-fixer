@@ -1,0 +1,22 @@
+{
+    "redirects": [
+        {
+            "source": "/(.*)",
+            "destination": "https://meetfix.opsora.io/$1",
+            "permanent": true,
+            "has": [{ "type": "header", "key": "x-forwarded-proto", "value": "http" }]
+        }
+    ],
+    "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
+                { "key": "X-Content-Type-Options", "value": "nosniff" },
+                { "key": "X-Frame-Options", "value": "DENY" },
+                { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,2127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teams Meeting Migration Portal</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 86.52 86.52'><path fill='%232563eb' d='M86.52 43.26c0-2.71-1.05-5.25-2.97-7.16l-4.58-4.58v-.93c0-12.7-10.33-23.03-23.03-23.03h-.93l-4.58-4.59C48.51 1.05 46.01 0 43.26 0s-5.25 1.05-7.16 2.97l-4.59 4.59h-.93C17.88 7.55 7.55 17.88 7.55 30.58v.93l-4.58 4.58C1.05 38.01 0 40.55 0 43.26s1.05 5.25 2.97 7.16l4.59 4.58v.93c0 12.7 10.33 23.03 23.03 23.03h.93l4.58 4.58c1.92 1.91 4.46 2.97 7.17 2.97s5.25-1.05 7.16-2.97l4.58-4.58h.93c12.7 0 23.03-10.33 23.03-23.03v-.93l4.58-4.58c1.91-1.91 2.97-4.46 2.97-7.16ZM78.55 31.69v23.14L54.84 78.55H31.68L7.97 54.83V31.68L31.68 7.97h23.15l23.72 23.72Z'/></svg>">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* ── Brand ── */
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-light: #eff6ff;
+
+            /* ── Semantic ── */
+            --success: #16a34a;
+            --success-bg: #f0fdf4;
+            --success-border: #bbf7d0;
+            --warning: #d97706;
+            --warning-bg: #fffbeb;
+            --warning-border: #fde68a;
+            --danger: #dc2626;
+            --danger-hover: #b91c1c;
+            --danger-bg: #fef2f2;
+            --danger-border: #fecaca;
+
+            /* ── Neutrals ── */
+            --bg: #f9fafb;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+
+            /* ── Radii ── */
+            --radius: 6px;
+            --radius-full: 9999px;
+        }
+
+        html {
+            font-size: 14px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ─ HEADER ─────────────────────────────────────────────────────── */
+        .app-header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+
+        .app-header-inner {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .app-header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .app-header p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .brand-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 12px;
+            letter-spacing: 0.01em;
+            transition: color 0.15s;
+        }
+
+        .brand-link:hover {
+            color: var(--accent);
+        }
+
+        .brand-link:hover .brand-logo {
+            opacity: 1;
+        }
+
+        .brand-logo {
+            width: 14px;
+            height: 14px;
+            opacity: 0.5;
+            transition: opacity 0.15s;
+        }
+
+        .brand-sep {
+            color: #d1d5db;
+            margin: 0 5px;
+            font-weight: 300;
+        }
+
+        .help-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.15s, color 0.15s;
+        }
+
+        .help-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ─ EXPLAINER ────────────────────────────────────────────────── */
+        .explainer {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        .explainer-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 12px;
+        }
+
+        .explainer-body {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+        .explainer-body:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .explainer-warning {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            border-radius: var(--radius);
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--warning);
+            margin-top: 14px;
+            line-height: 1.6;
+        }
+
+        .explainer-warning-icon {
+            flex-shrink: 0;
+        }
+
+        /* ─ STEP HINT ────────────────────────────────────────────────── */
+        .step-hint {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .step-hint-badge {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1px;
+        }
+
+        .step-hint-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .step-hint-text em {
+            font-style: italic;
+        }
+
+        /* ─ LAYOUT ───────────────────────────────────────────────────── */
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 0 24px 48px;
+        }
+
+        /* ─ SECTION DIVIDERS ───────────────────────────────────────── */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 32px 0 12px;
+        }
+
+        .section-divider.first {
+            margin-top: 0;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ─ CARDS ─────────────────────────────────────────────────────── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: var(--radius) 0 0 var(--radius);
+            background: var(--border);
+            transition: background 0.15s;
+        }
+
+        .card.active::before {
+            background: var(--accent);
+        }
+
+        .card.done::before {
+            background: var(--success);
+        }
+
+        .card.locked {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        /* ─ BUTTONS ──────────────────────────────────────────────────── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 36px;
+            padding: 0 20px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--accent-hover);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: var(--danger-hover);
+        }
+
+        /* Keep ghost-danger as alias */
+        .btn-ghost-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .btn-ghost-danger:hover:not(:disabled) {
+            background: var(--danger-hover);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--bg);
+        }
+
+        /* ─ SIGNED-IN CHIP ─────────────────────────────────────────── */
+        .signed-in-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--success);
+            padding: 4px 12px;
+            border: 1px solid var(--success-border);
+            border-radius: var(--radius-full);
+            background: var(--success-bg);
+        }
+
+        .signed-in-chip::before {
+            content: "✓";
+        }
+
+        /* ─ MEETING LIST PANEL ─────────────────────────────────────── */
+        .panel {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: var(--surface);
+        }
+
+        .panel-header {
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .panel-header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .panel-header-sub {
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .toggle-link {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            font-family: inherit;
+        }
+
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+
+        .panel-list {
+            max-height: 400px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .panel-list:empty::after {
+            content: "No meetings found";
+            display: block;
+            padding: 32px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .panel-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .panel-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .meeting-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 16px;
+            min-height: 44px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s ease;
+        }
+
+        .meeting-row:last-child {
+            border-bottom: none;
+        }
+
+        .meeting-row:hover {
+            background: var(--accent-light);
+        }
+
+        .meeting-row input[type="checkbox"] {
+            flex-shrink: 0;
+            width: 14px;
+            height: 14px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .meeting-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            overflow: hidden;
+        }
+
+        .meeting-subject {
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-shrink: 1;
+        }
+
+        .meeting-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .meeting-badges {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+            align-items: center;
+        }
+
+        /* ─ BADGES ───────────────────────────────────────────────────── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 1px 8px;
+            border-radius: var(--radius-full);
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--bg);
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .badge-attendees {
+            background: var(--bg);
+            color: var(--text-secondary);
+        }
+
+        .badge-teams {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .badge-old-link {
+            background: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        .badge-recurring {
+            background: var(--bg);
+            color: var(--text-secondary);
+        }
+
+        /* ─ PANEL FOOTER ─────────────────────────────────────────────── */
+        .panel-footer {
+            padding: 6px 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .panel-info {
+            padding: 6px 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+        }
+
+        /* ─ CANCEL MESSAGE FIELD ────────────────────────────────────── */
+        .cancel-msg-box {
+            margin-top: 12px;
+        }
+
+        .cancel-msg-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .cancel-msg-box textarea {
+            width: 100%;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 13px;
+            line-height: 1.55;
+            color: var(--text-primary);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 8px 12px;
+            resize: vertical;
+            min-height: 68px;
+            max-height: 160px;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .cancel-msg-box textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .cancel-msg-box textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .cancel-msg-hint {
+            margin-top: 5px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ─ ACTIONS ───────────────────────────────────────────────────── */
+        .actions-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .actions-spacer {
+            flex: 1;
+            min-width: 24px;
+        }
+
+        /* ─ PROGRESS ──────────────────────────────────────────────────── */
+        .progress-area {
+            margin-top: 16px;
+            display: none;
+        }
+
+        .progress-area.visible {
+            display: block;
+        }
+
+        .progress-header {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-track {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent);
+            border-radius: var(--radius-full);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* ─ LOG AREA ──────────────────────────────────────────────────── */
+        .log-area {
+            background: #111827;
+            color: #e5e7eb;
+            font-family: 'Consolas', 'Cascadia Code', 'Fira Code', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            min-height: 80px;
+            max-height: 320px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            scrollbar-width: thin;
+            scrollbar-color: #374151 transparent;
+        }
+
+        .log-area::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .log-area::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 2px;
+        }
+
+        .log-success {
+            color: #4ade80;
+        }
+
+        .log-error {
+            color: #f87171;
+        }
+
+        .log-info {
+            color: #93c5fd;
+        }
+
+        .log-warn {
+            color: #fbbf24;
+        }
+
+        /* ─ ERROR BANNER ─────────────────────────────────────────────── */
+        .error-banner {
+            display: none;
+            background: var(--danger-bg);
+            color: var(--danger);
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--danger-border);
+            margin-bottom: 16px;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .error-banner.visible {
+            display: block;
+        }
+
+        .error-banner .dismiss {
+            position: absolute;
+            right: 12px;
+            top: 8px;
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* ─ SPINNER ──────────────────────────────────────────────────── */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.65s linear infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* ─ FOOTER ───────────────────────────────────────────────────── */
+        .app-footer {
+            padding: 24px 0 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            margin-top: 24px;
+        }
+
+        .app-footer a {
+            color: var(--accent);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .app-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-sep {
+            margin: 0 8px;
+        }
+
+        /* ─ MODAL ───────────────────────────────────────────────────── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .4);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius);
+            max-width: 560px;
+            width: 92%;
+            max-height: 84vh;
+            overflow-y: auto;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .1), 0 8px 24px rgba(0, 0, 0, .12);
+        }
+
+        .modal h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .modal h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+        .modal p,
+        .modal li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .modal ul {
+            padding-left: 20px;
+        }
+
+        .modal-close {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-muted);
+            line-height: 1;
+            margin: -4px -4px 0 0;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* ─ EMPTY STATE ─────────────────────────────────────────────── */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            gap: 8px;
+        }
+
+        .empty-state-icon {
+            font-size: 24px;
+            opacity: 0.4;
+        }
+
+        .empty-state-text {
+            font-size: 12px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 16px 32px;
+            }
+
+            .app-header-inner {
+                padding: 12px 16px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header class="app-header">
+        <div class="app-header-inner">
+            <div>
+                <h1>Teams Meeting Migration</h1>
+                <p>Migrate Teams meetings after a tenant-to-tenant mailbox migration<span
+                        class="brand-sep">&middot;</span><a href="https://opsora.io" target="_blank" rel="noopener"
+                        class="brand-link"><svg class="brand-logo" viewBox="0 0 86.52 86.52" fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M86.52 43.26c0-2.71-1.05-5.25-2.97-7.16l-4.58-4.58v-.93c0-12.7-10.33-23.03-23.03-23.03h-.93l-4.58-4.59C48.51 1.05 46.01 0 43.26 0s-5.25 1.05-7.16 2.97l-4.59 4.59h-.93C17.88 7.55 7.55 17.88 7.55 30.58v.93l-4.58 4.58C1.05 38.01 0 40.55 0 43.26s1.05 5.25 2.97 7.16l4.59 4.58v.93c0 12.7 10.33 23.03 23.03 23.03h.93l4.58 4.58c1.92 1.91 4.46 2.97 7.17 2.97s5.25-1.05 7.16-2.97l4.58-4.58h.93c12.7 0 23.03-10.33 23.03-23.03v-.93l4.58-4.58c1.91-1.91 2.97-4.46 2.97-7.16ZM78.55 31.69v23.14L54.84 78.55H31.68L7.97 54.83V31.68L31.68 7.97h23.15l23.72 23.72Z" />
+                        </svg>by Opsora</a></p>
+            </div>
+            <button class="help-btn" onclick="openHelp()" title="How this works">?</button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div id="errorBanner" class="error-banner">
+            <button class="dismiss" onclick="dismissError()">&times;</button>
+            <span id="errorText"></span>
+        </div>
+
+        <!-- ── EXPLAINER ──────────────────────────────────────── -->
+        <div class="explainer">
+            <div class="explainer-title">Why do I need to do this?</div>
+            <div class="explainer-body" id="explainerBody1">
+                When your email account was moved to a new company environment (tenant), all your calendar meetings were
+                copied over. However, the Teams meeting links inside those meetings still point to the old
+                environment. Attendees who click "Join" will end up in a broken or empty session,
+                and you won't be able to start the meeting properly.
+            </div>
+            <div class="explainer-body" id="explainerBody2">
+                This tool fixes that in two steps: first it <strong>cancels the broken meetings</strong> in your old
+                account so attendees are notified, then it <strong>recreates each meeting as a new event</strong> in
+                your new account with a fresh Teams link. The old event is deleted and attendees receive a new
+                invite.
+            </div>
+            <div class="explainer-warning">
+                <span class="explainer-warning-icon">&#9888;</span>
+                <span><strong>If you skip this, your attendees won't be able to join any recurring or future
+                        meetings</strong> set up before the move. They will see the calendar entry, but clicking
+                    "Join Teams Meeting" will either show an error or connect them to a session you can't
+                    access.</span>
+            </div>
+        </div>
+
+        <!-- OLD TENANT -->
+        <div id="sourceSection">
+            <div class="section-divider first"><span class="section-label" id="srcSectionLabel">Old Tenant - Cancel
+                    Meetings</span></div>
+
+            <div class="step-hint">
+                <span class="step-hint-badge">1</span>
+                <span class="step-hint-text" id="srcStepHint"><strong>Your old account.</strong> Sign in with the email
+                    address you used <em>before</em> the migration. Cancellation notices will come from this address, so
+                    attendees will recognise it and understand the meeting is being replaced.</span>
+            </div>
+
+            <div id="step1Card" class="card active">
+                <div class="card-title" id="srcCardTitle">Sign in to Old Tenant</div>
+                <div id="step1Content">
+                    <button class="btn btn-primary" id="btnLoginSource" onclick="handleLoginSource()">Sign in to Old
+                        Tenant</button>
+                </div>
+                <div id="step1Done" style="display:none;">
+                    <span class="signed-in-chip" id="sourceEmail"></span>
+                </div>
+            </div>
+
+            <div id="step3Card" class="card locked">
+                <div class="card-title">Cancel Meetings</div>
+                <div id="step3Content">
+                    <button class="btn btn-primary" id="btnLoadSourceMeetings" onclick="handleLoadSourceMeetings()"
+                        disabled>Load Meetings</button>
+                    <span id="sourceLoadSpinner" style="display:none;" class="loading-label"><span
+                            class="spinner"></span>
+                        Loading...</span>
+                </div>
+                <div id="sourcePanel" style="display:none;">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-header-left">
+                                <span id="sourcePanelTitle">Old Tenant</span>
+                                <span class="panel-header-sub">Only meetings where you are the organizer</span>
+                            </div>
+                            <button class="toggle-link" id="sourceToggle" onclick="toggleAllSource()">Select
+                                All</button>
+                        </div>
+                        <div class="panel-list" id="sourceList"></div>
+                        <div class="panel-footer"><span id="sourceFooter"></span></div>
+                        <div class="panel-info" id="srcPanelInfo">Selected meetings will be cancelled. Attendees
+                            receive a cancellation notice from your old email address.</div>
+                    </div>
+                    <div class="cancel-msg-box">
+                        <label class="cancel-msg-label" for="cancelMessage">Cancellation message (sent to
+                            attendees)</label>
+                        <textarea id="cancelMessage" rows="3" placeholder="Enter cancellation message…"></textarea>
+                        <div class="cancel-msg-hint">This message is included in the cancellation email attendees
+                            receive
+                            from your old address.</div>
+                    </div>
+                    <div class="actions-row">
+                        <button class="btn btn-danger" id="btnCancelSelected" onclick="handleCancelSelected()">Cancel
+                            Selected</button>
+                        <div class="actions-spacer"></div>
+                        <button class="btn btn-secondary" id="btnCancelAll" onclick="handleCancelAll()">Cancel All
+                            Future</button>
+                    </div>
+                    <div id="sourceProgressArea" class="progress-area">
+                        <div class="progress-header"><span id="sourceProgressText"></span></div>
+                        <div class="progress-bar-track">
+                            <div class="progress-bar" id="sourceProgressBar"></div>
+                        </div>
+                        <div class="log-area" id="sourceLogArea"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /sourceSection -->
+
+        <!-- NEW TENANT -->
+        <div id="destinationSection">
+            <div class="section-divider"><span class="section-label" id="dstSectionLabel">New Tenant - Recreate
+                    Meetings</span></div>
+
+            <div class="step-hint">
+                <span class="step-hint-badge">2</span>
+                <span class="step-hint-text" id="dstStepHint"><strong>Your new account.</strong> Sign in with your new
+                    email
+                    address. For each selected meeting the tool creates a fresh copy with a new Teams link, then removes
+                    the
+                    old event. Attendees will receive <strong>a new meeting invite</strong> and <strong>a cancellation
+                        of
+                        the old one</strong>. This is expected and can't be avoided.</span>
+            </div>
+
+            <div id="step2Card" class="card active">
+                <div class="card-title" id="dstCardTitle">Sign in to New Tenant</div>
+                <div id="step2Content">
+                    <button class="btn btn-primary" id="btnLoginTarget" onclick="handleLoginTarget()">Sign in to New
+                        Tenant</button>
+                </div>
+                <div id="step2Done" style="display:none;">
+                    <span class="signed-in-chip" id="targetEmail"></span>
+                </div>
+            </div>
+
+            <div id="step4Card" class="card locked">
+                <div class="card-title">Recreate Meetings</div>
+                <div id="step4Content">
+                    <button class="btn btn-primary" id="btnLoadTargetMeetings" onclick="handleLoadTargetMeetings()"
+                        disabled>Load Meetings</button>
+                    <span id="targetLoadSpinner" style="display:none;" class="loading-label"><span
+                            class="spinner"></span>
+                        Loading...</span>
+                </div>
+                <div id="targetPanel" style="display:none;">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-header-left">
+                                <span id="targetPanelTitle">New Tenant</span>
+                                <span class="panel-header-sub">Only meetings where you are the organizer</span>
+                            </div>
+                            <button class="toggle-link" id="targetToggle" onclick="toggleAllTarget()">Select
+                                All</button>
+                        </div>
+                        <div class="panel-list" id="targetList"></div>
+                        <div class="panel-footer"><span id="targetFooter"></span></div>
+                        <div class="panel-info" id="dstPanelInfo">For each selected meeting a new event with a fresh
+                            Teams
+                            link is created first, then the old event is deleted. Attendees receive a new invite and a
+                            cancellation of the old meeting.</div>
+                    </div>
+                    <div class="actions-row">
+                        <button class="btn btn-primary" id="btnRecreate" onclick="handleRecreate()">Recreate with New
+                            Teams
+                            Links</button>
+                    </div>
+                    <div id="targetProgressArea" class="progress-area">
+                        <div class="progress-header"><span id="targetProgressText"></span></div>
+                        <div class="progress-bar-track">
+                            <div class="progress-bar" id="targetProgressBar"></div>
+                        </div>
+                        <div class="log-area" id="targetLogArea"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /destinationSection -->
+
+        <div class="app-footer">
+            <a onclick="handleReset()">Logout / Reset</a>
+            <span class="footer-sep">&middot;</span>
+            This app runs entirely in your browser. No data is sent to any server other than Microsoft Graph.
+        </div>
+    </div>
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" onclick="closeHelp()">×</button>
+            <h2>How This App Works</h2>
+
+            <h3>The Problem</h3>
+            <p>After a tenant-to-tenant mailbox migration (e.g. BitTitan), calendar events are copied to the new tenant
+                but Teams meeting links still point to the old tenant. These meetings are broken: the organizer can't
+                start them and attendees join an orphaned session.</p>
+
+            <h3>What This Tool Does</h3>
+            <ul>
+                <li>Shows your future meetings in both the old and new tenant as two independent, selectable lists.</li>
+                <li>You choose which meetings to cancel in the old tenant and which to recreate in the new tenant.</li>
+            </ul>
+
+            <h3>Why Cancel from the Old Tenant?</h3>
+            <p>External attendees (e.g. bob@externalcompany.com) only accept cancellation notices from the original
+                organizer email (your old address). Cancelling from the new email would be ignored by their mail server.
+            </p>
+
+            <h3>Why "Silent Delete" in the New Tenant?</h3>
+            <p>Directly deleting an event where you are the organizer sends cancellation notices to all attendees from
+                your new email. This is confusing because they'd get a cancellation for a meeting they don't recognize.
+                Instead, we first remove all attendees (PATCH), then delete. No notifications go out.</p>
+
+            <h3>"Cancel All" Button</h3>
+            <p>This cancels ALL future meetings you organize in the old tenant, including ones that were not migrated.
+                Useful for a complete cleanup of the old tenant. This action is independent of the meeting lists.</p>
+
+            <h3>Security</h3>
+            <ul>
+                <li>This app runs 100% in your browser. No backend, no server-side storage.</li>
+                <li>Authentication uses PKCE — no client secret is stored or transmitted.</li>
+                <li>Tokens are stored in sessionStorage and cleared when the tab is closed.</li>
+                <li>The only external calls go to Microsoft login and Graph API endpoints.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.38.3/lib/msal-browser.min.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            // ================================================================
+            //  URL PARAMETERS — ?source=OldCo&destination=NewCo&mode=destination
+            //  Saved to sessionStorage so they survive the MSAL redirect
+            //  mode=source      Show only the cancel (old tenant) section
+            //  mode=destination  Show only the recreate (new tenant) section
+            //  (omit mode)      Show both sections (default)
+            // ================================================================
+            const _urlParams = new URLSearchParams(window.location.search);
+            const _srcParam = _urlParams.get('source');
+            const _dstParam = _urlParams.get('destination');
+            const _modeParam = _urlParams.get('mode');
+            if (_srcParam) sessionStorage.setItem('cfg_srcCompany', _srcParam);
+            if (_dstParam) sessionStorage.setItem('cfg_dstCompany', _dstParam);
+            if (_modeParam) {
+                sessionStorage.setItem('cfg_mode', _modeParam);
+            } else if (!_urlParams.has('code') && !_urlParams.has('error')) {
+                // Fresh navigation with no mode param — reset so both sections show
+                sessionStorage.removeItem('cfg_mode');
+            }
+            const SRC_COMPANY = _srcParam || sessionStorage.getItem('cfg_srcCompany') || '';
+            const DST_COMPANY = _dstParam || sessionStorage.getItem('cfg_dstCompany') || '';
+            const APP_MODE = (_modeParam || sessionStorage.getItem('cfg_mode') || '').toLowerCase();
+
+            // Hide sections based on mode
+            function applyMode() {
+                const srcSection = document.getElementById('sourceSection');
+                const dstSection = document.getElementById('destinationSection');
+                const explainer = document.querySelector('.explainer');
+
+                if (APP_MODE === 'destination') {
+                    // Hide old tenant section entirely
+                    if (srcSection) srcSection.style.display = 'none';
+                    // Give destination divider the .first style (removes top margin)
+                    const dstDivider = dstSection && dstSection.querySelector('.section-divider');
+                    if (dstDivider) dstDivider.classList.add('first');
+                    // Update explainer for destination-only mode
+                    if (explainer) {
+                        const eb1 = document.getElementById('explainerBody1');
+                        const eb2 = document.getElementById('explainerBody2');
+                        const src = SRC_COMPANY || 'your old environment';
+                        const dst = DST_COMPANY || 'your new environment';
+                        if (eb1) eb1.innerHTML = `After your mailbox was moved to ${dst}, all calendar meetings were copied over. However, the Teams meeting links still point to ${src}, so attendees clicking "Join" will end up in a broken session.`;
+                        if (eb2) eb2.innerHTML = `This tool <strong>recreates each meeting as a new event</strong> in your ${dst} account with a fresh Teams link. The old copy is deleted and attendees receive a new invite.`;
+                    }
+                } else if (APP_MODE === 'source') {
+                    // Hide new tenant section entirely
+                    if (dstSection) dstSection.style.display = 'none';
+                    // Update explainer for source-only mode
+                    if (explainer) {
+                        const eb1 = document.getElementById('explainerBody1');
+                        const eb2 = document.getElementById('explainerBody2');
+                        const src = SRC_COMPANY || 'your old environment';
+                        if (eb1) eb1.innerHTML = `After your mailbox was moved to a new environment, the Teams meeting links in your old calendar still point to ${src}. Attendees clicking "Join" will end up in a broken session.`;
+                        if (eb2) eb2.innerHTML = `This tool <strong>cancels the broken meetings</strong> in your ${src} account so attendees are notified and won't try to join outdated sessions.`;
+                    }
+                }
+            }
+
+            function applyCompanyLabels() {
+                if (!SRC_COMPANY && !DST_COMPANY) return;
+                const src = SRC_COMPANY || 'Old Tenant';
+                const dst = DST_COMPANY || 'New Tenant';
+
+                document.title = `Teams Migration - ${src} to ${dst}`;
+
+                const sub = document.querySelector('.app-header p');
+                if (sub) sub.innerHTML = `Migrating Teams meetings from <strong>${src}</strong> to <strong>${dst}</strong><span class="brand-sep">&middot;</span><a href="https://opsora.io" target="_blank" rel="noopener" class="brand-link"><svg class="brand-logo" viewBox="0 0 86.52 86.52" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M86.52 43.26c0-2.71-1.05-5.25-2.97-7.16l-4.58-4.58v-.93c0-12.7-10.33-23.03-23.03-23.03h-.93l-4.58-4.59C48.51 1.05 46.01 0 43.26 0s-5.25 1.05-7.16 2.97l-4.59 4.59h-.93C17.88 7.55 7.55 17.88 7.55 30.58v.93l-4.58 4.58C1.05 38.01 0 40.55 0 43.26s1.05 5.25 2.97 7.16l4.59 4.58v.93c0 12.7 10.33 23.03 23.03 23.03h.93l4.58 4.58c1.92 1.91 4.46 2.97 7.17 2.97s5.25-1.05 7.16-2.97l4.58-4.58h.93c12.7 0 23.03-10.33 23.03-23.03v-.93l4.58-4.58c1.91-1.91 2.97-4.46 2.97-7.16ZM78.55 31.69v23.14L54.84 78.55H31.68L7.97 54.83V31.68L31.68 7.97h23.15l23.72 23.72Z"/></svg>by Opsora</a>`;
+
+                // Explainer section
+                const eb1 = document.getElementById('explainerBody1');
+                if (eb1) eb1.innerHTML = `When your email account was moved from <strong>${src}</strong> to <strong>${dst}</strong>, all your calendar meetings were copied over. However, the Teams meeting links inside those meetings still point to <strong>${src}</strong>. Attendees who click "Join" will end up in a broken or empty session, and you won't be able to start the meeting properly.`;
+                const eb2 = document.getElementById('explainerBody2');
+                if (eb2) eb2.innerHTML = `This tool fixes that in two steps: first it <strong>cancels the broken meetings</strong> in your <strong>${src}</strong> account so attendees are notified, then it <strong>recreates each meeting as a new event</strong> in your <strong>${dst}</strong> account with a fresh Teams link. The old event is deleted and attendees receive a new invite.`;
+
+                const srcSec = document.getElementById('srcSectionLabel');
+                if (srcSec) srcSec.innerHTML = `${src} - Cancel Meetings`;
+                const dstSec = document.getElementById('dstSectionLabel');
+                if (dstSec) dstSec.innerHTML = `${dst} - Recreate Meetings`;
+
+                const srcHint = document.getElementById('srcStepHint');
+                if (srcHint) srcHint.innerHTML = `<strong>Your ${src} account.</strong> Sign in with the email address you used at <strong>${src}</strong>. Cancellation notices will come from this address, so attendees will recognise it and understand the meeting is being replaced.`;
+                const dstHint = document.getElementById('dstStepHint');
+                if (dstHint) dstHint.innerHTML = `<strong>Your ${dst} account.</strong> Sign in with your <strong>${dst}</strong> email address. For each selected meeting the tool creates a fresh copy with a new Teams link, then removes the old event. Attendees will receive <strong>a new meeting invite</strong> and <strong>a cancellation of the old one</strong>. This is expected and can't be avoided.`;
+
+                const srcTitle = document.getElementById('srcCardTitle');
+                if (srcTitle) srcTitle.textContent = `Sign in to ${src}`;
+                const btnSrc = document.getElementById('btnLoginSource');
+                if (btnSrc) btnSrc.textContent = `Sign in to ${src}`;
+                const dstTitle = document.getElementById('dstCardTitle');
+                if (dstTitle) dstTitle.textContent = `Sign in to ${dst}`;
+                const btnDst = document.getElementById('btnLoginTarget');
+                if (btnDst) btnDst.textContent = `Sign in to ${dst}`;
+
+                const srcPT = document.getElementById('sourcePanelTitle');
+                if (srcPT) srcPT.textContent = src;
+                const dstPT = document.getElementById('targetPanelTitle');
+                if (dstPT) dstPT.textContent = dst;
+
+                const srcInfo = document.getElementById('srcPanelInfo');
+                if (srcInfo) srcInfo.innerHTML = `Selected meetings will be cancelled. Attendees receive a cancellation notice from your <strong>${src}</strong> email address.`;
+                const dstInfo = document.getElementById('dstPanelInfo');
+                if (dstInfo) dstInfo.innerHTML = `For each selected meeting a new event with a fresh Teams link is created first, then the old event is deleted. Attendees receive a new invite from your <strong>${dst}</strong> address and a cancellation of the old meeting.`;
+            }
+            applyCompanyLabels();
+            applyMode();
+
+            // ================================================================
+            //  STATE
+            // ================================================================
+            let sourceAccount = null;
+            let targetAccount = null;
+            let sourceMeetings = [];
+            let targetMeetings = [];
+
+            // ================================================================
+            //  MSAL SETUP — Single instance, redirect flow
+            // ================================================================
+            const msalApp = new msal.PublicClientApplication({
+                auth: { clientId: CONFIG.clientId, authority: CONFIG.authority, redirectUri: CONFIG.redirectUri },
+                cache: { cacheLocation: 'sessionStorage', storeAuthStateInCookie: false }
+            });
+
+            // Initialize MSAL and handle any redirect response (runs on every page load)
+            let msalReady = msalApp.initialize().then(() => {
+                console.log('[MSAL] Initialized');
+                return msalApp.handleRedirectPromise();
+            }).then(response => {
+                if (response) {
+                    const loginType = response.state; // 'source' or 'target'
+                    console.log('[Login] Redirect completed for:', loginType, response.account.username, 'tenant:', response.account.tenantId);
+
+                    if (loginType === 'source') {
+                        sourceAccount = response.account;
+                        sessionStorage.setItem('msal_sourceAccountId', response.account.homeAccountId);
+                        updateSourceUI();
+                    } else if (loginType === 'target') {
+                        targetAccount = response.account;
+                        sessionStorage.setItem('msal_targetAccountId', response.account.homeAccountId);
+                        updateTargetUI();
+                    }
+                }
+                // Restore any previously logged-in accounts from cache
+                restorePreviousAccounts();
+            }).catch(err => {
+                console.error('[MSAL] Init or redirect failed:', err);
+                showError('Authentication error: ' + err.message);
+            });
+
+            function restorePreviousAccounts() {
+                const accounts = msalApp.getAllAccounts();
+                console.log('[MSAL] Cached accounts:', accounts.length);
+
+                const sourceId = sessionStorage.getItem('msal_sourceAccountId');
+                const targetId = sessionStorage.getItem('msal_targetAccountId');
+
+                if (sourceId && !sourceAccount) {
+                    sourceAccount = accounts.find(a => a.homeAccountId === sourceId) || null;
+                    if (sourceAccount) {
+                        console.log('[MSAL] Restored source account:', sourceAccount.username);
+                        updateSourceUI();
+                    }
+                }
+                if (targetId && !targetAccount) {
+                    targetAccount = accounts.find(a => a.homeAccountId === targetId) || null;
+                    if (targetAccount) {
+                        console.log('[MSAL] Restored target account:', targetAccount.username);
+                        updateTargetUI();
+                    }
+                }
+            }
+
+            // Initialize default cancellation message
+            const cancelMsgEl = document.getElementById('cancelMessage');
+            if (cancelMsgEl) cancelMsgEl.value = CONFIG.defaultCancellationMessage || '';
+
+            function getCancelMessage() {
+                const el = document.getElementById('cancelMessage');
+                return el ? el.value.trim() : '';
+            }
+
+            function updateSourceUI() {
+                document.getElementById('sourceEmail').textContent = sourceAccount.username;
+                document.getElementById('step1Content').style.display = 'none';
+                document.getElementById('step1Done').style.display = 'block';
+                document.getElementById('step1Card').classList.remove('active');
+                document.getElementById('step1Card').classList.add('done');
+                // Unlock the cancel lane independently — no need for new tenant login
+                document.getElementById('step3Card').classList.remove('locked');
+                document.getElementById('step3Card').classList.add('active');
+                document.getElementById('btnLoadSourceMeetings').disabled = false;
+            }
+
+            function updateTargetUI() {
+                document.getElementById('targetEmail').textContent = targetAccount.username;
+                document.getElementById('step2Content').style.display = 'none';
+                document.getElementById('step2Done').style.display = 'block';
+                document.getElementById('step2Card').classList.remove('active');
+                document.getElementById('step2Card').classList.add('done');
+                // Unlock the recreate lane independently — no need for old tenant login
+                document.getElementById('step4Card').classList.remove('locked');
+                document.getElementById('step4Card').classList.add('active');
+                document.getElementById('btnLoadTargetMeetings').disabled = false;
+            }
+
+            // ================================================================
+            //  TOKEN HELPERS
+            // ================================================================
+            function debugTokenScopes(label, accessToken) {
+                try {
+                    // Decode the JWT payload (middle segment)
+                    const payload = JSON.parse(atob(accessToken.split('.')[1]));
+                    console.log(`[Token] ${label} scopes granted:`, payload.scp || payload.roles || '(none)');
+                    console.log(`[Token] ${label} audience:`, payload.aud);
+                    console.log(`[Token] ${label} tenant:`, payload.tid);
+                    console.log(`[Token] ${label} upn:`, payload.upn || payload.preferred_username);
+                    if (!payload.scp || !payload.scp.includes('Calendars.ReadWrite')) {
+                        console.warn(`[Token] ⚠️ ${label} token is MISSING Calendars.ReadWrite!`);
+                        console.warn('[Token] This will cause 403 errors. Admin consent may be required.');
+                        console.warn('[Token] Grant consent at: https://entra.microsoft.com → App registrations → ' + CONFIG.clientId + ' → API permissions → Grant admin consent');
+                    }
+                } catch (e) {
+                    console.warn('[Token] Could not decode token:', e.message);
+                }
+            }
+
+            async function getSourceToken() {
+                try {
+                    const r = await msalApp.acquireTokenSilent({ scopes: CONFIG.graphScopes, account: sourceAccount });
+                    console.log('[Token] Source token acquired silently');
+                    debugTokenScopes('Source', r.accessToken);
+                    return r.accessToken;
+                } catch (err) {
+                    console.warn('[Token] Silent source failed:', err.message);
+                    // Session expired — redirect to re-authenticate
+                    msalApp.acquireTokenRedirect({ scopes: CONFIG.graphScopes, account: sourceAccount, state: 'source' });
+                    throw new Error('Session expired, redirecting to sign in…');
+                }
+            }
+
+            async function getTargetToken() {
+                try {
+                    const r = await msalApp.acquireTokenSilent({ scopes: CONFIG.graphScopes, account: targetAccount });
+                    console.log('[Token] Target token acquired silently');
+                    debugTokenScopes('Target', r.accessToken);
+                    return r.accessToken;
+                } catch (err) {
+                    console.warn('[Token] Silent target failed:', err.message);
+                    msalApp.acquireTokenRedirect({ scopes: CONFIG.graphScopes, account: targetAccount, state: 'target' });
+                    throw new Error('Session expired, redirecting to sign in…');
+                }
+            }
+
+            // ================================================================
+            //  GRAPH API HELPERS
+            // ================================================================
+            async function graphRequest(url, token, method = 'GET', body = null, retries = 3) {
+                console.log(`[Graph] → ${method} ${url}`);
+                if (body) console.log('[Graph]   Body:', JSON.stringify(body).substring(0, 500));
+
+                const opts = {
+                    method,
+                    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
+                };
+                if (body) opts.body = JSON.stringify(body);
+
+                const res = await fetch(url, opts);
+                console.log(`[Graph] ← ${res.status} ${res.statusText} (${method} ${url.split('?')[0]})`);
+
+                if (res.status === 429 && retries > 0) {
+                    const wait = parseInt(res.headers.get('Retry-After') || '5', 10);
+                    console.warn(`[Graph]   Throttled, retrying in ${wait}s…`);
+                    await delay(wait * 1000);
+                    return graphRequest(url, token, method, body, retries - 1);
+                }
+
+                if (res.status === 204) { console.log('[Graph]   204 No Content (success)'); return null; }
+                if (!res.ok) {
+                    let errBody = '';
+                    try { errBody = await res.text(); } catch { }
+                    console.error(`[Graph]   ERROR ${res.status}:`, errBody);
+                    throw new Error(`Graph ${method} ${res.status}: ${errBody}`);
+                }
+                if (method === 'DELETE') return null;
+                const json = await res.json();
+                if (json.value) console.log(`[Graph]   Response contains ${json.value.length} items`);
+                return json;
+            }
+
+            async function graphGet(url, token) {
+                let all = [];
+                let nextUrl = url;
+                while (nextUrl) {
+                    const data = await graphRequest(nextUrl, token, 'GET');
+                    if (data.value) all = all.concat(data.value);
+                    nextUrl = data['@odata.nextLink'] || null;
+                }
+                return all;
+            }
+
+            async function graphPost(url, token, body) { return graphRequest(url, token, 'POST', body); }
+            async function graphPatch(url, token, body) { return graphRequest(url, token, 'PATCH', body); }
+            async function graphDelete(url, token) { return graphRequest(url, token, 'DELETE'); }
+            async function graphCancel(eventId, token, comment) {
+                return graphRequest(
+                    `https://graph.microsoft.com/v1.0/me/events/${eventId}/cancel`,
+                    token, 'POST', { Comment: comment || '' }
+                );
+            }
+
+            // ================================================================
+            //  CORE FUNCTIONS
+            // ================================================================
+            async function fetchFutureEvents(token) {
+                const now = new Date().toISOString();
+                const select = 'id,subject,start,end,body,attendees,isOnlineMeeting,onlineMeeting,onlineMeetingUrl,recurrence,location,iCalUId,type,seriesMasterId,isOrganizer,organizer';
+
+                // Query 1: Future single events (start >= now)
+                const futureFilter = `start/dateTime ge '${now}'`;
+                const futureUrl = `https://graph.microsoft.com/v1.0/me/events?$filter=${encodeURIComponent(futureFilter)}&$top=100&$select=${select}`;
+                console.log('[Graph] Fetching future events:', futureUrl);
+
+                // Query 2: All series masters
+                const seriesUrl = `https://graph.microsoft.com/v1.0/me/events?$filter=${encodeURIComponent("type eq 'seriesMaster'")}&$top=100&$select=${select}`;
+                console.log('[Graph] Fetching series masters:', seriesUrl);
+
+                const [futureEvents, masters] = await Promise.all([
+                    graphGet(futureUrl, token),
+                    graphGet(seriesUrl, token)
+                ]);
+                console.log(`[Graph] ${futureEvents.length} future events, ${masters.length} series masters`);
+
+                // Keep only singleInstance from the future query
+                const singles = futureEvents.filter(e => e.type === 'singleInstance');
+                console.log(`[Graph] ${singles.length} future single events`);
+
+                // Filter series masters client-side using the recurrence range (no extra API calls)
+                const today = now.split('T')[0]; // 'YYYY-MM-DD'
+                const activeMasters = masters.filter(m => {
+                    const range = m.recurrence && m.recurrence.range;
+                    if (!range) return true; // no range info — include to be safe
+                    if (range.type === 'noEnd') {
+                        m._seriesEndDate = null; // ongoing
+                        return true;
+                    }
+                    if (range.type === 'endDate' && range.endDate) {
+                        m._seriesEndDate = range.endDate;
+                        return range.endDate >= today; // skip if end date is in the past
+                    }
+                    if (range.type === 'numbered') {
+                        m._seriesEndDate = null; // can't easily compute without instances
+                        return true; // include — assume active
+                    }
+                    return true;
+                });
+                // Use the series start date as the "next" date (first occurrence / recurrence anchor)
+                activeMasters.forEach(m => {
+                    if (!m._nextOccurrence) m._nextOccurrence = m.start;
+                });
+                console.log(`[Graph] ${activeMasters.length} of ${masters.length} series masters are active (client-side filter)`);
+
+                const events = [...singles, ...activeMasters];
+
+                // Log each event for debugging
+                events.forEach(e => {
+                    const org = e.organizer?.emailAddress?.address || 'unknown';
+                    console.log(`  → "${e.subject}" | type=${e.type} | isOrganizer=${e.isOrganizer} | organizer=${org}`);
+                });
+                return events;
+            }
+
+            function getOldTenantDomain() {
+                // Auto-detect from the source account's email domain
+                if (sourceAccount && sourceAccount.username) {
+                    const parts = sourceAccount.username.split('@');
+                    if (parts.length === 2) return parts[1].toLowerCase();
+                }
+                return '';
+            }
+
+            function detectOldTenantLink(event) {
+                const domain = getOldTenantDomain();
+                if (!domain) return false; // no source account yet — can't detect
+                if (event.onlineMeetingUrl && event.onlineMeetingUrl.toLowerCase().includes(domain)) return true;
+                if (event.body && event.body.content && event.body.content.toLowerCase().includes(domain)) return true;
+                return false;
+            }
+
+            function hasTeamsLink(event) {
+                if (event.isOnlineMeeting === true) return true;
+                if (event.onlineMeetingUrl && event.onlineMeetingUrl.length > 0) return true;
+                if (event.body && event.body.content && event.body.content.toLowerCase().includes('teams.microsoft.com')) return true;
+                return false;
+            }
+
+            function deduplicateSeries(events) {
+                const masterIds = new Set();
+                const seen = new Set();
+                // First pass: collect series master IDs
+                for (const e of events) {
+                    if (e.type === 'seriesMaster') masterIds.add(e.id);
+                }
+                // Second pass: skip occurrences/exceptions whose master is present, and deduplicate
+                return events.filter(e => {
+                    // Skip duplicates (same event ID)
+                    if (seen.has(e.id)) return false;
+                    seen.add(e.id);
+                    // Skip occurrences/exceptions if their series master is already in the list
+                    if ((e.type === 'occurrence' || e.type === 'exception') && e.seriesMasterId && masterIds.has(e.seriesMasterId)) {
+                        return false;
+                    }
+                    return true;
+                });
+            }
+
+            async function loadSourceMeetings(token) {
+                console.log('[Source] Loading source meetings…');
+                const raw = await fetchFutureEvents(token);
+                const deduped = deduplicateSeries(raw);
+                sourceMeetings = deduped
+                    .filter(e => e.isOrganizer === true)
+                    .map(e => ({
+                        id: e.id,
+                        subject: e.subject || '(No Subject)',
+                        start: e.type === 'seriesMaster' && e._nextOccurrence ? e._nextOccurrence : e.start,
+                        end: e.end,
+                        attendeeCount: (e.attendees || []).length,
+                        isRecurring: e.type === 'seriesMaster',
+                        seriesEndDate: e._seriesEndDate || null,
+                        type: e.type,
+                        recurrence: e.recurrence,
+                        attendees: e.attendees || [],
+                        location: e.location,
+                        hasTeamsLink: hasTeamsLink(e),
+                        hasOldTenantLink: detectOldTenantLink(e),
+                        selected: true
+                    }));
+                sourceMeetings.sort((a, b) => (a.start.dateTime || '').localeCompare(b.start.dateTime || ''));
+                renderSourceList();
+            }
+
+            async function loadTargetMeetings(token) {
+                console.log('[Target] Loading target meetings…');
+                const raw = await fetchFutureEvents(token);
+                const deduped = deduplicateSeries(raw);
+                targetMeetings = deduped
+                    .filter(e => e.isOrganizer === true)
+                    .map(e => ({
+                        id: e.id,
+                        subject: e.subject || '(No Subject)',
+                        start: e.type === 'seriesMaster' && e._nextOccurrence ? e._nextOccurrence : e.start,
+                        end: e.end,
+                        attendeeCount: (e.attendees || []).length,
+                        isRecurring: e.type === 'seriesMaster',
+                        seriesEndDate: e._seriesEndDate || null,
+                        type: e.type,
+                        recurrence: e.recurrence,
+                        attendees: e.attendees || [],
+                        location: e.location,
+                        hasTeamsLink: hasTeamsLink(e),
+                        hasOldTenantLink: detectOldTenantLink(e),
+                        originalOnlineMeetingUrl: e.onlineMeetingUrl || null,
+                        selected: true
+                    }));
+                targetMeetings.sort((a, b) => (a.start.dateTime || '').localeCompare(b.start.dateTime || ''));
+                renderTargetList();
+            }
+
+            async function cancelAllFutureInSource(sourceToken) {
+                showProgress('source', true);
+                clearLog('source');
+                logLine('source', 'Fetching all future meetings from old tenant…', 'info');
+
+                const raw = await fetchFutureEvents(sourceToken);
+                const cancelledMasters = new Set();
+                const toCancelList = [];
+
+                for (const e of raw) {
+                    if (e.type === 'occurrence' || e.type === 'exception') {
+                        const masterId = e.seriesMasterId;
+                        if (masterId && !cancelledMasters.has(masterId)) {
+                            cancelledMasters.add(masterId);
+                            toCancelList.push({ id: masterId, subject: e.subject, start: e.start, fromOccurrence: true });
+                        }
+                    } else {
+                        if (!cancelledMasters.has(e.id)) {
+                            cancelledMasters.add(e.id);
+                            toCancelList.push({ id: e.id, subject: e.subject || '(No Subject)', start: e.start, fromOccurrence: false });
+                        }
+                    }
+                }
+
+                logLine('source', `Found ${toCancelList.length} unique meeting(s)/series to cancel.\n`, 'info');
+
+                const results = { cancelled: [], errors: [], skippedDuplicateSeries: [] };
+                let processed = 0;
+
+                const comment = getCancelMessage();
+                for (const mtg of toCancelList) {
+                    try {
+                        await graphCancel(mtg.id, sourceToken, comment);
+                        results.cancelled.push({ subject: mtg.subject, start: mtg.start.dateTime, success: true });
+                        logLine('source', `✅ Cancelled: ${mtg.subject}`, 'success');
+                    } catch (err) {
+                        results.errors.push({ subject: mtg.subject, start: mtg.start.dateTime, error: err.message });
+                        logLine('source', `❌ Failed: ${mtg.subject} — ${err.message}`, 'error');
+                    }
+                    processed++;
+                    updateProgress('source', processed, toCancelList.length);
+                    await delay(200);
+                }
+
+                logLine('source', `\nCancel All complete. ${results.cancelled.length} cancelled, ${results.errors.length} errors.`, 'info');
+
+                return results;
+            }
+
+            // ================================================================
+            //  UI HELPERS
+            // ================================================================
+            function formatDateTime(start, end) {
+                try {
+                    const s = new Date(start.dateTime + 'Z');
+                    const e = new Date(end.dateTime + 'Z');
+                    const dateStr = s.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+                    const timeS = s.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                    const timeE = e.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                    return `${dateStr} · ${timeS}–${timeE}`;
+                } catch {
+                    return start.dateTime || 'Unknown';
+                }
+            }
+
+            function renderSourceList() {
+                const list = document.getElementById('sourceList');
+                list.innerHTML = '';
+                if (sourceMeetings.length === 0) {
+                    list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">No meetings where you are the organizer</div></div>';
+                    updateSourceFooter(); return;
+                }
+                sourceMeetings.forEach((mtg, i) => {
+                    const row = document.createElement('div');
+                    row.className = 'meeting-row';
+                    const endsSuffix = mtg.isRecurring && mtg.seriesEndDate ? ` · until ${mtg.seriesEndDate}` : '';
+                    const dateLabel = (mtg.isRecurring ? '🔁 ' : '') + formatDateTime(mtg.start, mtg.end) + endsSuffix;
+                    row.innerHTML = `
+                        <input type="checkbox" ${mtg.selected ? 'checked' : ''} onchange="window._app.toggleSource(${i}, this.checked)">
+                        <div class="meeting-info">
+                            <span class="meeting-subject">${esc(mtg.subject)}</span>
+                            <span class="meeting-meta">${dateLabel}</span>
+                        </div>
+                        <div class="meeting-badges">
+                            ${mtg.hasOldTenantLink ? '<span class="badge badge-old-link">⚠ Old</span>' : mtg.hasTeamsLink ? '<span class="badge badge-teams">Teams</span>' : ''}
+                            ${mtg.attendeeCount > 0 ? `<span class="badge badge-attendees">${mtg.attendeeCount} attendee${mtg.attendeeCount !== 1 ? 's' : ''}</span>` : ''}
+                        </div>
+                    `;
+                    list.appendChild(row);
+                });
+                updateSourceFooter();
+            }
+
+            function renderTargetList() {
+                const list = document.getElementById('targetList');
+                list.innerHTML = '';
+                if (targetMeetings.length === 0) {
+                    list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">No meetings where you are the organizer</div></div>';
+                    updateTargetFooter(); return;
+                }
+                targetMeetings.forEach((mtg, i) => {
+                    const row = document.createElement('div');
+                    row.className = 'meeting-row';
+                    const endsSuffix = mtg.isRecurring && mtg.seriesEndDate ? ` · until ${mtg.seriesEndDate}` : '';
+                    const dateLabel = (mtg.isRecurring ? '🔁 ' : '') + formatDateTime(mtg.start, mtg.end) + endsSuffix;
+                    const teamsBadge = mtg.hasOldTenantLink
+                        ? '<span class="badge badge-old-link">⚠ Old</span>'
+                        : mtg.hasTeamsLink ? '<span class="badge badge-teams">Teams</span>' : '';
+                    row.innerHTML = `
+                        <input type="checkbox" ${mtg.selected ? 'checked' : ''} onchange="window._app.toggleTarget(${i}, this.checked)">
+                        <div class="meeting-info">
+                            <span class="meeting-subject">${esc(mtg.subject)}</span>
+                            <span class="meeting-meta">${dateLabel}</span>
+                        </div>
+                        <div class="meeting-badges">
+                            ${teamsBadge}
+                            ${mtg.attendeeCount > 0 ? `<span class="badge badge-attendees">${mtg.attendeeCount} attendee${mtg.attendeeCount !== 1 ? 's' : ''}</span>` : ''}
+                        </div>
+                    `;
+                    list.appendChild(row);
+                });
+                updateTargetFooter();
+            }
+
+            function updateSourceFooter() {
+                const sel = sourceMeetings.filter(m => m.selected).length;
+                const total = sourceMeetings.length;
+                document.getElementById('sourceFooter').textContent = `${sel} of ${total} selected`;
+                document.getElementById('btnCancelSelected').disabled = (sel === 0);
+                document.getElementById('sourceToggle').textContent =
+                    (sel === total && total > 0) ? 'Deselect All' : 'Select All';
+            }
+            function updateTargetFooter() {
+                const sel = targetMeetings.filter(m => m.selected).length;
+                const total = targetMeetings.length;
+                document.getElementById('targetFooter').textContent = `${sel} of ${total} selected`;
+                document.getElementById('btnRecreate').disabled = (sel === 0);
+                document.getElementById('targetToggle').textContent =
+                    (sel === total && total > 0) ? 'Deselect All' : 'Select All';
+            }
+
+            // Progress helpers — scoped to source or target
+            function showProgress(area, visible) {
+                document.getElementById(area + 'ProgressArea').classList.toggle('visible', visible);
+            }
+            function clearLog(area) {
+                document.getElementById(area + 'LogArea').innerHTML = '';
+            }
+            function logLine(area, text, type = '') {
+                const log = document.getElementById(area + 'LogArea');
+                const span = document.createElement('span');
+                if (type) span.className = 'log-' + type;
+                span.textContent = text + '\n';
+                log.appendChild(span);
+                log.scrollTop = log.scrollHeight;
+            }
+            function updateProgress(area, current, total) {
+                const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+                document.getElementById(area + 'ProgressBar').style.width = pct + '%';
+                document.getElementById(area + 'ProgressText').textContent = `${current} / ${total} processed`;
+            }
+
+            function showError(msg) {
+                document.getElementById('errorText').textContent = msg;
+                document.getElementById('errorBanner').classList.add('visible');
+            }
+            function esc(str) {
+                const d = document.createElement('div');
+                d.textContent = str;
+                return d.innerHTML;
+            }
+            // Extracts the user's description from a Teams meeting HTML body as
+            // clean plain text, discarding the Teams-generated meeting-info blob.
+            // Returns plain text so Graph safely combines it with a fresh blob
+            // when the new event is created with isOnlineMeeting = true.
+            function extractDescriptionText(html) {
+                if (!html) return '';
+                let c = html;
+
+                // Strategy 1: cut at the long _____ divider line Teams inserts
+                const dividerIdx = c.search(/_{10,}/);
+                if (dividerIdx > -1) {
+                    const before = c.substring(0, dividerIdx);
+                    // The divider lives inside a <div>; cut from that opening tag
+                    const lastOpenDiv = before.lastIndexOf('<div');
+                    c = before.substring(0, lastOpenDiv > -1 ? lastOpenDiv : dividerIdx);
+                } else {
+                    // Strategy 2: no divider — cut from the Teams join-URL element
+                    const teamsIdx = c.search(/href="https:\/\/teams\.microsoft\.com\/l\/meetup-join/i);
+                    if (teamsIdx > -1) {
+                        const before = c.substring(0, teamsIdx);
+                        const lastOpenDiv = before.lastIndexOf('<div');
+                        c = before.substring(0, lastOpenDiv > -1 ? lastOpenDiv : teamsIdx);
+                    }
+                }
+
+                // Convert the remaining HTML fragment to plain text
+                return c
+                    .replace(/<br\s*\/?>/gi, '\n')
+                    .replace(/<\/p>/gi, '\n')
+                    .replace(/<\/div>/gi, '\n')
+                    .replace(/<\/li>/gi, '\n')
+                    .replace(/<li[^>]*>/gi, '\u2022 ')
+                    .replace(/<[^>]+>/g, '')
+                    .replace(/&nbsp;/g, ' ')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&quot;/g, '"')
+                    .replace(/&#39;/g, "'")
+                    .replace(/\r\n|\r/g, '\n')
+                    .replace(/\n{3,}/g, '\n\n')
+                    .trim();
+            }
+
+            function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+            // ================================================================
+            //  EVENT HANDLERS (exposed globally)
+            // ================================================================
+            window.handleLoginSource = async function () {
+                try {
+                    document.getElementById('btnLoginSource').disabled = true;
+                    await msalReady;
+                    console.log('[Login] Redirecting to Microsoft for source login…');
+                    // state='source' tells handleRedirectPromise which login this is
+                    await msalApp.loginRedirect({ scopes: CONFIG.graphScopes, prompt: 'select_account', state: 'source' });
+                } catch (err) {
+                    document.getElementById('btnLoginSource').disabled = false;
+                    if (err.errorCode !== 'user_cancelled') showError('Source login failed: ' + err.message);
+                }
+            };
+
+            window.handleLoginTarget = async function () {
+                try {
+                    document.getElementById('btnLoginTarget').disabled = true;
+                    await msalReady;
+                    console.log('[Login] Redirecting to Microsoft for target login…');
+                    await msalApp.loginRedirect({ scopes: CONFIG.graphScopes, prompt: 'select_account', state: 'target' });
+                } catch (err) {
+                    document.getElementById('btnLoginTarget').disabled = false;
+                    if (err.errorCode !== 'user_cancelled') showError('Target login failed: ' + err.message);
+                }
+            };
+
+            window.handleLoadSourceMeetings = async function () {
+                try {
+                    document.getElementById('btnLoadSourceMeetings').disabled = true;
+                    document.getElementById('sourceLoadSpinner').style.display = 'inline-flex';
+                    const sourceToken = await getSourceToken();
+                    await loadSourceMeetings(sourceToken);
+                    document.getElementById('sourcePanelTitle').textContent = SRC_COMPANY
+                        ? `${SRC_COMPANY} — ${sourceAccount.username} — ${sourceMeetings.length} meeting${sourceMeetings.length !== 1 ? 's' : ''}`
+                        : `${sourceAccount.username} — ${sourceMeetings.length} meeting${sourceMeetings.length !== 1 ? 's' : ''}`;
+                    document.getElementById('step3Content').style.display = 'none';
+                    document.getElementById('sourcePanel').style.display = 'block';
+                    document.getElementById('step3Card').classList.remove('active');
+                    document.getElementById('step3Card').classList.add('done');
+                    document.getElementById('sourceLoadSpinner').style.display = 'none';
+                } catch (err) {
+                    document.getElementById('btnLoadSourceMeetings').disabled = false;
+                    document.getElementById('sourceLoadSpinner').style.display = 'none';
+                    showError('Failed to load old tenant meetings: ' + err.message);
+                }
+            };
+
+            window.handleLoadTargetMeetings = async function () {
+                try {
+                    document.getElementById('btnLoadTargetMeetings').disabled = true;
+                    document.getElementById('targetLoadSpinner').style.display = 'inline-flex';
+                    const targetToken = await getTargetToken();
+                    await loadTargetMeetings(targetToken);
+                    document.getElementById('targetPanelTitle').textContent = DST_COMPANY
+                        ? `${DST_COMPANY} — ${targetAccount.username} — ${targetMeetings.length} meeting${targetMeetings.length !== 1 ? 's' : ''}`
+                        : `${targetAccount.username} — ${targetMeetings.length} meeting${targetMeetings.length !== 1 ? 's' : ''}`;
+                    document.getElementById('step4Content').style.display = 'none';
+                    document.getElementById('targetPanel').style.display = 'block';
+                    document.getElementById('step4Card').classList.remove('active');
+                    document.getElementById('step4Card').classList.add('done');
+                    document.getElementById('targetLoadSpinner').style.display = 'none';
+                } catch (err) {
+                    document.getElementById('btnLoadTargetMeetings').disabled = false;
+                    document.getElementById('targetLoadSpinner').style.display = 'none';
+                    showError('Failed to load new tenant meetings: ' + err.message);
+                }
+            };
+
+            window.handleCancelSelected = async function () {
+                const selSource = sourceMeetings.filter(m => m.selected);
+                if (selSource.length === 0) return;
+
+                const msg = `This will cancel ${selSource.length} meeting(s) in your old tenant (${sourceAccount.username}).\n\nAttendees will receive cancellation notices from your old email address.\n\nContinue?`;
+                if (!confirm(msg)) return;
+
+                document.getElementById('btnCancelSelected').disabled = true;
+                document.getElementById('btnCancelAll').disabled = true;
+
+                showProgress('source', true);
+                clearLog('source');
+                logLine('source', `Cancelling ${selSource.length} meeting(s) in old tenant…`, 'info');
+
+                let processed = 0;
+                let cancelled = 0;
+                let errors = 0;
+
+                try {
+                    const sourceToken = await getSourceToken();
+                    const comment = getCancelMessage();
+                    for (const mtg of selSource) {
+                        try {
+                            await graphCancel(mtg.id, sourceToken, comment);
+                            logLine('source', `✅ Cancelled: ${mtg.subject}`, 'success');
+                            cancelled++;
+                        } catch (err) {
+                            logLine('source', `❌ Failed: ${mtg.subject} — ${err.message}`, 'error');
+                            errors++;
+                        }
+                        processed++;
+                        updateProgress('source', processed, selSource.length);
+                        await delay(200);
+                    }
+                } catch (err) {
+                    showError('Cancel error: ' + err.message);
+                }
+
+                logLine('source', `\nDone: ${cancelled} cancelled, ${errors} errors`, 'info');
+                document.getElementById('btnCancelSelected').disabled = false;
+                document.getElementById('btnCancelAll').disabled = false;
+            };
+
+            window.handleRecreate = async function () {
+                const selTarget = targetMeetings.filter(m => m.selected);
+                if (selTarget.length === 0) return;
+
+                const msg = `This will recreate ${selTarget.length} meeting(s) in your new tenant (${targetAccount.username}) with brand-new Teams links.\n\nHow it works:\n• A new event is created first with a fresh Teams link\n• Attendees receive one new meeting invite\n• The old event is then deleted (attendees receive a cancellation)\n\nContinue?`;
+                if (!confirm(msg)) return;
+
+                document.getElementById('btnRecreate').disabled = true;
+
+                showProgress('target', true);
+                clearLog('target');
+                logLine('target', `Recreating ${selTarget.length} meeting(s) with new Teams links…`, 'info');
+
+                let processed = 0;
+                let recreated = 0;
+                let linkChanged = 0;
+                let linkUnchanged = 0;
+                let linkMissing = 0;
+                let errors = 0;
+
+                try {
+                    const targetToken = await getTargetToken();
+                    for (const mtg of selTarget) {
+                        try {
+                            // ── Step 1: GET full event details ─────────────────────
+                            const fullEvent = await graphRequest(
+                                `https://graph.microsoft.com/v1.0/me/events/${mtg.id}?$select=subject,body,bodyPreview,start,end,location,locations,attendees,recurrence,isOnlineMeeting,onlineMeetingUrl,onlineMeeting,importance,sensitivity,showAs,isAllDay,isReminderOn,reminderMinutesBeforeStart,categories,hideAttendees,responseRequested,allowNewTimeProposals`,
+                                targetToken, 'GET'
+                            );
+                            if (!fullEvent) {
+                                logLine('target', `⚠ ${mtg.subject} — could not read event, skipping.`, 'warn');
+                                errors++; processed++;
+                                updateProgress('target', processed, selTarget.length);
+                                continue;
+                            }
+
+                            const oldUrl = fullEvent.onlineMeetingUrl
+                                || (fullEvent.onlineMeeting && fullEvent.onlineMeeting.joinUrl)
+                                || mtg.originalOnlineMeetingUrl
+                                || null;
+
+                            // ── Step 2: Build new event payload ───────────────────
+                            const cleanAttendees = (fullEvent.attendees || []).map(a => ({
+                                emailAddress: a.emailAddress,
+                                type: a.type
+                            }));
+
+                            // Extract the user's description as plain text,
+                            // stripping the old Teams blob so Graph generates a
+                            // fresh one via isOnlineMeeting = true.
+                            const descriptionText = fullEvent.body && fullEvent.body.content
+                                ? extractDescriptionText(fullEvent.body.content)
+                                : (fullEvent.bodyPreview ? fullEvent.bodyPreview.replace(/^Microsoft Teams.*$/im, '').trim() : '');
+
+                            const payload = {
+                                subject: fullEvent.subject,
+                                body: { contentType: 'text', content: descriptionText },
+                                start: fullEvent.start,
+                                end: fullEvent.end,
+                                isOnlineMeeting: true,
+                                onlineMeetingProvider: 'teamsForBusiness'
+                            };
+                            if (fullEvent.location) payload.location = fullEvent.location;
+                            if (fullEvent.locations && fullEvent.locations.length > 0) payload.locations = fullEvent.locations;
+                            if (cleanAttendees.length > 0) payload.attendees = cleanAttendees;
+                            if (fullEvent.recurrence) payload.recurrence = fullEvent.recurrence;
+                            if (fullEvent.importance && fullEvent.importance !== 'normal') payload.importance = fullEvent.importance;
+                            if (fullEvent.sensitivity && fullEvent.sensitivity !== 'normal') payload.sensitivity = fullEvent.sensitivity;
+                            if (fullEvent.showAs) payload.showAs = fullEvent.showAs;
+                            if (fullEvent.isAllDay === true) payload.isAllDay = true;
+                            if (fullEvent.isReminderOn !== undefined) payload.isReminderOn = fullEvent.isReminderOn;
+                            if (fullEvent.reminderMinutesBeforeStart !== undefined) payload.reminderMinutesBeforeStart = fullEvent.reminderMinutesBeforeStart;
+                            if (fullEvent.categories && fullEvent.categories.length > 0) payload.categories = fullEvent.categories;
+                            if (fullEvent.hideAttendees === true) payload.hideAttendees = true;
+                            if (fullEvent.responseRequested !== undefined) payload.responseRequested = fullEvent.responseRequested;
+                            if (fullEvent.allowNewTimeProposals !== undefined) payload.allowNewTimeProposals = fullEvent.allowNewTimeProposals;
+
+                            // ── Step 3: POST new event FIRST (so data is safe) ───
+                            const newEvent = await graphPost(
+                                'https://graph.microsoft.com/v1.0/me/events',
+                                targetToken, payload
+                            );
+                            if (!newEvent || !newEvent.id) {
+                                logLine('target', `❌ ${mtg.subject} — new event creation failed. Old event kept intact.`, 'error');
+                                errors++; processed++;
+                                updateProgress('target', processed, selTarget.length);
+                                continue;
+                            }
+
+                            // ── Step 4: DELETE old event (now safe — new one exists) ──
+                            await delay(300);
+                            await graphDelete(
+                                `https://graph.microsoft.com/v1.0/me/events/${mtg.id}`,
+                                targetToken
+                            );
+
+                            // ── Step 5: Verify new Teams link ─────────────────────
+                            await delay(600);
+                            const verified = await graphRequest(
+                                `https://graph.microsoft.com/v1.0/me/events/${newEvent.id}?$select=id,onlineMeetingUrl,onlineMeeting,isOnlineMeeting`,
+                                targetToken, 'GET'
+                            );
+                            const newUrl = verified
+                                ? (verified.onlineMeetingUrl || (verified.onlineMeeting && verified.onlineMeeting.joinUrl) || null)
+                                : null;
+
+                            if (!newUrl) {
+                                logLine('target', `⚠ ${mtg.subject} — recreated but no Teams link found. Check manually.`, 'warn');
+                                linkMissing++;
+                            } else if (!oldUrl) {
+                                logLine('target', `✅ ${mtg.subject} — new Teams link created`, 'success');
+                                linkChanged++;
+                            } else if (newUrl === oldUrl) {
+                                logLine('target', `⚠ ${mtg.subject} — link unchanged after recreate.`, 'warn');
+                                linkUnchanged++;
+                            } else {
+                                logLine('target', `✅ ${mtg.subject} — new Teams link confirmed`, 'success');
+                                linkChanged++;
+                            }
+                            recreated++;
+                        } catch (err) {
+                            logLine('target', `❌ Failed: ${mtg.subject} — ${err.message}`, 'error');
+                            errors++;
+                        }
+                        processed++;
+                        updateProgress('target', processed, selTarget.length);
+                        await delay(200);
+                    }
+                } catch (err) {
+                    showError('Recreate error: ' + err.message);
+                }
+
+                logLine('target', `\nDone: ${recreated} recreated (${linkChanged} new link, ${linkUnchanged} unchanged, ${linkMissing} missing), ${errors} errors`, 'info');
+                document.getElementById('btnRecreate').disabled = false;
+            };
+
+            window.handleCancelAll = async function () {
+                let count = '(fetching…)';
+                try {
+                    const sourceToken = await getSourceToken();
+                    const preview = await fetchFutureEvents(sourceToken);
+                    count = preview.length;
+                } catch { }
+
+                const msg = `This will cancel ALL ${count} future meeting(s) you organise in ${sourceAccount.username}.\n\nExternal attendees will receive cancellation notices. This cannot be undone.\n\nContinue?`;
+                if (!confirm(msg)) return;
+
+                document.getElementById('btnCancelSelected').disabled = true;
+                document.getElementById('btnCancelAll').disabled = true;
+
+                showProgress('source', true);
+                clearLog('source');
+
+                try {
+                    const sourceToken = await getSourceToken();
+                    await cancelAllFutureInSource(sourceToken);
+                } catch (err) {
+                    showError('Cancel All error: ' + err.message);
+                }
+
+                document.getElementById('btnCancelSelected').disabled = false;
+                document.getElementById('btnCancelAll').disabled = false;
+            };
+
+            window.handleReset = function () {
+                sessionStorage.clear();
+                location.href = location.pathname;
+            };
+
+            window.openHelp = function () { document.getElementById('helpModal').classList.add('open'); };
+            window.closeHelp = function () { document.getElementById('helpModal').classList.remove('open'); };
+            window.dismissError = function () { document.getElementById('errorBanner').classList.remove('visible'); };
+
+            // Close modal on overlay click
+            document.getElementById('helpModal').addEventListener('click', function (e) {
+                if (e.target === this) closeHelp();
+            });
+
+            // Toggle helpers
+            window.toggleAllSource = function () {
+                const allSelected = sourceMeetings.every(m => m.selected);
+                sourceMeetings.forEach(m => m.selected = !allSelected);
+                renderSourceList();
+            };
+            window.toggleAllTarget = function () {
+                const allSelected = targetMeetings.every(m => m.selected);
+                targetMeetings.forEach(m => m.selected = !allSelected);
+                renderTargetList();
+            };
+
+            // Expose checkbox toggles
+            window._app = {
+                toggleSource(index, checked) {
+                    sourceMeetings[index].selected = checked;
+                    updateSourceFooter();
+                },
+                toggleTarget(index, checked) {
+                    targetMeetings[index].selected = checked;
+                    updateTargetFooter();
+                }
+            };
+
+        })();
+    </script>
+</body>
+
+</html>
