@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Creates the Azure App Registration for Teams Link Fixer (meetfix.opsora.io).
+    Creates the Entra App Registration for Teams Link Fixer (meetfix.opsora.io).
 
 .DESCRIPTION
     Registers a multi-tenant SPA application in Entra ID with the required

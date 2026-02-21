@@ -23,7 +23,98 @@ Example: `https://meetfix.opsora.io/?source=Contoso&destination=Fabrikam&mode=de
 
 ## Setup
 
-### 1. Azure App Registration
+### 1. Create an Entra App Registration
+
+Run the included script to create it automatically:
+
+```powershell
+.\scripts\Register-App.ps1
+```
+
+Or create it manually in the [Entra admin center](https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade):
+
+- Supported account types: **Accounts in any organizational directory (Multitenant)**
+- Platform: **Single-page application (SPA)**
+- Redirect URIs: `https://meetfix.opsora.io` and `http://localhost:5500` (for local dev)
+- API permissions (delegated): `Calendars.ReadWrite`, `OnlineMeetings.ReadWrite`, `User.Read`
+
+### 2. Configure the app
+
+Update `config.js` with your client ID:
+
+```js
+const CONFIG = {
+    clientId: "YOUR-APPLICATION-CLIENT-ID",
+    authority: "https://login.microsoftonline.com/common",
+    redirectUri: "https://meetfix.opsora.io",
+    graphScopes: ["Calendars.ReadWrite", "OnlineMeetings.ReadWrite", "User.Read"],
+    defaultCancellationMessage: "This meeting has been migrated. You will receive a new invitation shortly."
+};
+```
+
+For local development, change `redirectUri` to `http://localhost:5500`.
+
+### 3. Deploy to Vercel
+
+1. Push this repo to GitHub.
+2. Import it at [vercel.com](https://vercel.com) — select **Other** as the framework preset, leave all build fields empty.
+3. In Vercel project settings → Domains, add `meetfix.opsora.io`.
+4. In your DNS, add a `CNAME`: `meetfix` → `cname.vercel-dns.com`.
+5. Vercel provisions the SSL certificate automatically.
+
+### 4. Run locally
+
+```bash
+cd teams-link-fixer
+python3 -m http.server 5500
+```
+
+Then open `http://localhost:5500`. Make sure `redirectUri` in `config.js` is set to `http://localhost:5500` for local dev.
+
+## Files
+
+| File | Purpose |
+|---|---|
+| `index.html` | The complete app - HTML, CSS, and JavaScript in one file |
+| `config.js` | Your Entra app settings - update `clientId` and `redirectUri` |
+| `config.example.js` | Reference template showing all config keys |
+| `vercel.json` | Vercel routing and security headers config |
+| `scripts/Register-App.ps1` | PowerShell script to create the Entra App Registration |
+
+## Security
+
+- **No backend.** Runs entirely in the browser. No data goes anywhere except Microsoft login and Graph API endpoints.
+- **PKCE auth.** No client secret.
+- **Session storage only.** Tokens are cleared when the tab closes.
+- **No persistence.** Meeting data is in memory only, discarded on refresh.
+
+## License
+
+Internal tool - not licensed for distribution.
+
+
+After a cross-tenant migration, calendar events are copied to the new mailbox but the Teams links still point to the old tenant. The organizer can't start those meetings and attendees land in an orphaned session. This tool cancels the broken meetings in the old tenant and recreates them with fresh links in the new tenant.
+
+## How it works
+
+1. **Old tenant** - sign in with your old account, select meetings to cancel. Attendees receive a cancellation from your old address.
+2. **New tenant** - sign in with your new account, select meetings to recreate. Attendees receive a new invitation from your new address.
+
+## URL parameters
+
+All parameters are optional. They pre-fill labels and persist across the MSAL redirect.
+
+| Parameter | Description | Example |
+|---|---|---|
+| `source` | Display name for the old tenant | `?source=Contoso` |
+| `destination` | Display name for the new tenant | `?destination=Fabrikam` |
+| `mode` | Show only one section: `source` or `destination` | `?mode=destination` |
+
+Example: `https://meetfix.opsora.io/?source=Contoso&destination=Fabrikam&mode=destination`
+
+## Setup
+
+### 1. Entra App Registration
 
 Run the included script to create it automatically:
 
@@ -69,10 +160,10 @@ Then open `http://localhost:5500`. Make sure `redirectUri` in `config.js` matche
 | File | Purpose |
 |---|---|
 | `index.html` | The complete SPA - HTML, CSS, and JavaScript in one file |
-| `config.js` | Azure App Registration settings (**not committed**) |
+| `config.js` | Entra App Registration settings (**not committed**) |
 | `config.example.js` | Template - copy to `config.js` and fill in values |
 | `vercel.json` | Vercel routing config |
-| `scripts/Register-App.ps1` | PowerShell script to create the Azure App Registration |
+| `scripts/Register-App.ps1` | PowerShell script to create the Entra App Registration |
 
 ## Security
 
@@ -86,10 +177,6 @@ Then open `http://localhost:5500`. Make sure `redirectUri` in `config.js` matche
 Internal tool - not licensed for distribution.
 
 
-## The Problem
-
-After a cross-tenant migration, calendar events are copied to the new mailbox but Teams meeting links still point to the old tenant. The organizer can't start these meetings and attendees join an orphaned session.
-
 ## What This Tool Does
 
 1. Signs in to **both** the old and new tenant via popup login.
@@ -100,10 +187,10 @@ After a cross-tenant migration, calendar events are copied to the new mailbox bu
 ## Prerequisites
 
 - A modern browser (Edge, Chrome, Firefox, Safari).
-- An **Azure App Registration** (see below).
+- An **Entra App Registration** (see below).
 - A local web server to serve the files (Live Server, Python, Node, etc.).
 
-## Azure App Registration
+## Entra App Registration
 
 1. Go to [Azure Portal → App registrations](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade).
 2. Click **New registration**.
@@ -138,7 +225,7 @@ const CONFIG = {
 
 | Key | Description |
 |---|---|
-| `clientId` | The Application (client) ID from your Azure App Registration. |
+| `clientId` | The Application (client) ID from your Entra App Registration. |
 | `authority` | Leave as `common` for multi-tenant. Can be tenant-specific if needed. |
 | `redirectUri` | Must match the SPA redirect URI registered in Azure. |
 | `graphScopes` | Required Graph permissions. Do not remove any. |
@@ -216,7 +303,7 @@ Example: `https://your-app.vercel.app/?source=Contoso&destination=Fabrikam&mode=
 1. Push the folder as a GitHub repository. Make sure `config.js` is **not** committed (it is in `.gitignore`).
 2. Go to [vercel.com](https://vercel.com) and import the repository.
 3. No build step is needed — Vercel serves the static files directly.
-4. After the first deploy, copy the Vercel URL and add it as a redirect URI in your Azure App Registration (SPA platform), then update `redirectUri` in `config.js`.
+4. After the first deploy, copy the Vercel URL and add it as a redirect URI in your Entra App Registration (SPA platform), then update `redirectUri` in `config.js`.
 
 For a **public** repository: do not commit `config.js`. Instead, use a Vercel build command to generate it from an environment variable.
 For a **private** repository: committing `config.js` directly is fine.
@@ -226,10 +313,10 @@ For a **private** repository: committing `config.js` directly is fine.
 | File | Purpose |
 |---|---|
 | `index.html` | The complete SPA - HTML, CSS, and JavaScript in one file |
-| `config.js` | Your Azure App Registration settings (**not committed**) |
+| `config.js` | Your Entra App Registration settings (**not committed**) |
 | `config.example.js` | Template - copy to `config.js` and fill in your values |
 | `vercel.json` | Vercel routing config (serves `index.html` for all routes) |
-| `scripts/Register-App.ps1` | PowerShell script to create the Azure App Registration |
+| `scripts/Register-App.ps1` | PowerShell script to create the Entra App Registration |
 
 ## License
 

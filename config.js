@@ -1,11 +1,11 @@
 const CONFIG = {
-    // Azure App Registration — Application (client) ID
+    // Entra App Registration — Application (client) ID
     clientId: "7d767590-09ae-48c4-b1ff-1efc0154963e",
 
     // Authority — use "common" for multi-tenant
     authority: "https://login.microsoftonline.com/common",
 
-    // Redirect URI — must match what is configured in Azure App Registration
+    // Redirect URI — must match what is configured in Entra App Registration
     redirectUri: "https://meetfix.opsora.io",
 
     // Microsoft Graph delegated scopes

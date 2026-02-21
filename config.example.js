@@ -1,5 +1,5 @@
 const CONFIG = {
-    // Azure App Registration - Application (client) ID
+    // Entra App Registration - Application (client) ID
     // Get this from: Azure Portal > App registrations > your app > Overview
     clientId: "YOUR-APPLICATION-CLIENT-ID",
 
