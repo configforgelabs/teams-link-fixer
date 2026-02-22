@@ -124,4 +124,4 @@ Then open `http://localhost:5500`. Make sure `redirectUri` in `config.js` is set
 
 ## License
 
-Internal tool - not licensed for distribution.
+[MIT](LICENSE) — Copyright (c) 2026 Opsora LLC
